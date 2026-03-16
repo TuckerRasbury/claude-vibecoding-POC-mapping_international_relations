@@ -1,0 +1,530 @@
+# Prompt Plan: International Relations & News Dataviz Tool
+**Project:** Mapping International Relations and News  
+**Tool:** Claude Code  
+**Approach:** AI-Assisted Software Engineering (structured, phase-gated)  
+**Deployment:** GitHub Pages  
+**Last Updated:** March 2026  
+**Version:** 2.0 — UX layer added
+
+---
+
+## Project Soul (Read Before Every Session)
+
+> *"This tool was built for my past self — the version of me who was learning to think about politics, war, history, and conflict with a global mental map for the first time. I hope someone in the US will open this and encounter an atrocity, a conflict, or a people they had never thought about before. I want people to learn. That is the only goal."*
+
+---
+
+## What This Tool Actually Is
+
+This is not a news aggregator. It is not trying to compete with Ground News or Reuters.
+
+It is a **curiosity engine** — designed for a curious American who doesn't follow international news and has no mental map of the world yet. The tool's job is to pull them in, orient them, give them just enough context to feel something, and then send them out to real sources to learn more.
+
+The user arrives. They see something curated that catches their eye. They explore a map and stumble into a story they didn't know existed. They read a brief historical anchor that makes the story feel connected to something real, not random. They follow a link to a real source. They come back tomorrow.
+
+That is the entire loop. Everything else is decoration.
+
+---
+
+## UX Blueprint
+
+### Landing Experience
+The homepage opens with a **persistent search bar at the top** — always visible, always accessible. This serves users who arrive with a specific story or country in mind, and serves the builder (you) when verifying that the tool is surfacing real, relevant data.
+
+Below the search bar: a **featured story or region** — something hand-curated or algorithmically surfaced as high-relevance and underreported. Not a list. One thing, presented with enough weight to make someone stop scrolling.
+
+Below the featured story: **the map**.
+
+### The Map (Hero Element)
+The map is a **discovery surface** — the primary way users explore, not a supporting sidebar. It should feel like a globe you can poke around. Countries with active stories are visually distinct (brighter = more coverage volume).
+
+**Hover:** mousing over a country highlights its border and shows a minimal tooltip — the country name only. No stories yet. Just orientation.
+
+**Click or tap:** opens a story panel with the top 3 recent stories from that country. Tap on mobile works identically to click on desktop — no separate interaction model.
+
+Users might land on Myanmar because they clicked Southeast Asia out of curiosity, not because they searched for it. This is the moment the tool is designed for: *accidental discovery of something real.*
+
+### Search Bar (Always Visible)
+The search bar sits at the top of every page, persistently. It serves a different user than the map — the investigator rather than the explorer — and also serves as the primary tool for the builder to verify data quality.
+
+**Search inputs:**
+- Free text keyword (e.g. "coup", "famine", "election")
+- Country name or region (autocomplete suggested)
+- Date range (last 7 / 30 / 90 days / all time)
+- Topic category (see full list below)
+
+**Topic categories** (these are the tool's editorial taxonomy — distinct from GDELT's internal codes, which Claude Code must map to these):
+- Conflict & War
+- War Crimes & Genocide
+- Elections & Democracy
+- Economics & Trade
+- Labor & Unions
+- Industry & Corporate Power
+- Climate & Environment
+- Human Rights
+- Public Health
+
+**Important implementation note for Claude Code:** GDELT uses CAMEO event codes and GKG theme strings internally. The topic categories above are user-facing labels. Claude Code must research the GDELT taxonomy, map each category to the closest available GDELT codes or themes, document any gaps, and flag categories where GDELT coverage is thin (War Crimes and Genocide in particular may require supplementation from Wikipedia or manual curation).
+
+**When a search is run:**
+- A results panel opens alongside the map (sidebar on desktop, drawer on mobile)
+- Countries matching the search results are highlighted on the map simultaneously
+- The map does not disappear — it stays visible and responds to the search
+- Clicking a country on the map while a search is active filters results to that country
+- Clearing the search returns the map to its default discovery state
+
+### Story Cards
+Inspired by the **Ground News model** — each story shows how the same event is being covered differently across sources and countries. Not left/center/right like Ground News does it politically, but geographically: how is this story covered by local press vs. international press? What details appear in one and not the other?
+
+Each card is a **gateway**, not a destination. Enough to spark curiosity. A clear path out to the real source.
+
+### The Historical Anchor (Signature Feature)
+Every story has a **"Background" section** — a short, neutral, factual block that answers: *why is this happening?* Not opinion. Not framing. Just: here is what led to this moment, in plain language, sourced from Wikipedia or established historical record.
+
+This is what makes the tool different. Most news assumes you already know why Sudan matters, why the IMF is involved, why this border has been contested for 40 years. This tool never assumes that. It always explains.
+
+### What the User Walks Away With
+After 10 minutes, the user should feel: *I didn't know this was happening. I didn't know these forces were connected. I want to understand more.*
+
+The long-term learning objective is **systems thinking** — seeing how politics, economics, industry, and power interconnect across borders. That ambition lives in the design philosophy of every feature, even if the first version only scratches the surface through the historical anchor.
+
+### What This Tool Is NOT (Design Constraints)
+- Not a real-time breaking news feed
+- Not editorially opinionated — the tool presents facts, not conclusions
+- Not self-contained — it always sends users to primary sources
+- Not designed for people who already follow international news closely
+
+---
+
+## Learning Objectives (Consistent Across All Phases)
+
+Every design and product decision should serve at least one of these:
+
+1. **Discovery** — Did this help someone find a story they would never have found otherwise?
+2. **Orientation** — Does the user now know *where* this is happening and roughly *why*?
+3. **Connection** — Does the user feel even a small sense of why this matters to the world they live in?
+4. **Curiosity** — Did this make them want to go read more from a real source?
+
+If a feature doesn't serve at least one of these, cut it or defer it.
+
+---
+
+## Revised Phase Overview
+
+| Phase | Goal | Output |
+|-------|------|--------|
+| 0 | Project setup & context | CLAUDE.md, tech stack, folder structure |
+| 1 | Data layer | GDELT + Wikipedia integrations, data models |
+| 2 | Map as hero | Interactive discovery map, country → stories flow |
+| 3 | Featured story landing | Curated entry point, story card design |
+| 4 | Historical anchor | Background section on every story |
+| 5 | Multi-source view | Same event, different coverage angles |
+| 6 | Polish & deploy | Accessibility, GitHub Pages deployment |
+
+---
+
+## Phase 0 — Project Setup & Context File
+
+**Goal:** Give Claude Code a complete understanding of what you're building before it writes a single line of application code.
+
+**Run this prompt in Claude Code:**
+
+---
+
+```
+You are helping me build an educational web tool — a curiosity engine for international news and history, designed for curious Americans who have no background in international affairs. Before writing any application code, do the following:
+
+1. Read the existing README.md in this repository.
+
+2. Recommend a tech stack given these constraints:
+   - Deploys to GitHub Pages (static hosting only — no server-side runtime)
+   - Uses only free data sources: GDELT Project API, Wikipedia REST API, Wikidata
+   - The map is the HERO element of the UI — it needs to be interactive, explorable, and fast
+   - I am a data analyst comfortable with Python and SQL, growing my frontend skills through this project
+   - Make one clear recommendation with justification — not a list of options
+
+   Note: Because this deploys to GitHub Pages, the stack must be fully static or use a build step that outputs static files. A React or Vue app built with Vite and deployed via GitHub Actions is acceptable. A Node/Express server is not.
+
+3. After I approve the stack recommendation, create a CLAUDE.md file with:
+   - Project name and mission
+   - The full "Project Soul" paragraph (I will paste it below)
+   - The UX Blueprint (I will paste it below)
+   - Learning objectives (4, I will paste them below)
+   - Approved tech stack and justification
+   - Proposed folder structure
+   - Data sources: GDELT, Wikipedia REST API, Wikidata — with their base URLs, rate limits, and attribution requirements
+   - Design principles: neutral editorial voice, gateway not destination, map as discovery surface, historical anchor on every story
+   - A session startup checklist for future Claude Code sessions
+
+4. Do not scaffold the application yet. Stop after CLAUDE.md and wait for my review.
+
+---
+PROJECT SOUL:
+"This tool was built for my past self — the version of me who was learning to think about politics, war, history, and conflict with a global mental map for the first time. I hope someone in the US will open this and encounter an atrocity, a conflict, or a people they had never thought about before. I want people to learn. That is the only goal."
+
+UX BLUEPRINT:
+The homepage opens with a featured story or region — something curated to draw the user in. Below or beside it is the map. The map is the primary discovery surface — users explore it, click countries, and stumble into stories they didn't know existed. Each story is a gateway: enough context to spark curiosity, with a clear path to real sources. Every story has a Background section that explains the history and context in plain language, so nothing feels random. The tool never assumes the user already knows why a place or conflict matters.
+
+LEARNING OBJECTIVES (all four must be included verbatim):
+1. Discovery — Did this help someone find a story they would never have found otherwise?
+2. Orientation — Does the user now know where this is happening and roughly why?
+3. Connection — Does the user feel even a small sense of why this matters to the world they live in?
+4. Curiosity — Did this make them want to go read more from a real source?
+```
+
+---
+
+**Review checklist before Phase 1:**
+- [ ] Stack recommendation is genuinely compatible with GitHub Pages static hosting
+- [ ] CLAUDE.md captures the UX blueprint accurately
+- [ ] All four learning objectives are included verbatim
+- [ ] Data sources documented with attribution requirements (GDELT and OpenStreetMap both require attribution)
+- [ ] Folder structure is clean and scalable
+
+---
+
+## Phase 1 — Data Layer
+
+**Goal:** Get real data flowing before building any UI. Validate that your chosen APIs actually return what you need for the map-first experience.
+
+**Run this prompt:**
+
+---
+
+```
+Read CLAUDE.md before doing anything else.
+
+Phase 1 goal: Build the data layer. No UI yet. Stop after each step for my review.
+
+STEP 1A — GDELT integration
+- Query the GDELT Project free API to fetch recent international news
+- Results must include: headline, source name, country code, date, URL, and tone score if available
+- Write a module that accepts filters: country code, date range (7/30/90 days), and keyword
+- Test it: fetch the last 30 days of stories tagged to Sudan and print the first 5 results
+- Document rate limits and any gotchas at the top of the file
+- Important: this module must work in a static frontend context (no server). If GDELT's API has CORS restrictions, research and document the workaround options before proceeding.
+
+STEP 1B — Wikipedia background layer (after I approve 1A)
+- Given a country name or ISO code, fetch: a 3-sentence summary from Wikipedia REST API, population from Wikidata, capital city, and region/continent
+- This data powers the Historical Anchor feature — the background section on every story
+- Test against: Sudan, Myanmar, Haiti, Venezuela, Democratic Republic of Congo
+- Return as a clean JSON object matching our CountryContext data model
+
+STEP 1C — Data models (after I approve 1B)
+- Define the core data models:
+  - NewsStory: headline, source, country_code, date, url, tone_score, summary
+  - CountryContext: name, iso_code, region, capital, population, wikipedia_summary, wikipedia_url
+  - SearchFilters: country_code, region, date_range, keyword, topic_category
+  - TopicCategory: user_facing_label, gdelt_codes[], gdelt_themes[], notes (documents mapping gaps and where GDELT coverage is thin)
+  - CoverageAngle: source_country, headline, url, framing_notes (for the multi-source feature in Phase 5)
+- Use TypeScript interfaces or the equivalent in our approved stack
+
+Stop after 1C. Show me the models and a sample of real data from each API.
+```
+
+---
+
+**Review checklist before Phase 2:**
+- [ ] GDELT is returning real data and CORS is solved for static hosting
+- [ ] Wikipedia summaries are clean, under 3 sentences, and readable by a non-expert
+- [ ] Data models cover the full UX blueprint including the CoverageAngle model for Phase 5
+- [ ] No paid API keys required anywhere
+
+---
+
+## Phase 2 — Map as Hero
+
+**Goal:** Build the interactive discovery map AND the persistent search bar. These are the two primary entry points — explorer (map) and investigator (search) — and they must work together: search results highlight on the map, map clicks filter search results.
+
+**Run this prompt:**
+
+---
+
+```
+Read CLAUDE.md before doing anything else.
+
+Phase 2 goal: Build the map as the hero discovery surface. This is the most important UI element in the tool.
+
+Map requirements:
+- Use Leaflet.js with OpenStreetMap tiles (free, no API key, attribution required)
+- The map should fill most of the viewport — it is NOT a sidebar
+- Countries with active news stories (from GDELT) should be visually highlighted
+- Use a muted, serious color palette — this is not a game or a travel site. Suggested: dark navy base map, warm amber highlights for countries with stories, deeper red-amber for countries with high story volume
+- Do NOT use bright or playful colors. The subject matter is serious.
+
+STEP 2A — Base map with hover & interaction states
+- Render a full-viewport world map
+- Load country boundary GeoJSON (use Natural Earth free data) — this single GeoJSON layer handles ALL map interactions: hover, click, and story volume encoding. Do not create separate layers for each.
+- Countries with no stories: subtle, dark, receding
+- Countries with stories: highlighted in the warm amber palette
+- Hover state: highlight the country border and show a simple tooltip with the country name only — no stories yet. Example: "Sudan". Keep it minimal.
+- Attribution for OpenStreetMap must be visible per their requirements
+- Small country tap handling: many countries (Haiti, Bahrain, Luxembourg, etc.) are hard to tap accurately on mobile. Add a small tap radius buffer (approx 10px) so users don't have to be pixel-perfect. Test this against at least 3 small countries.
+
+STEP 2B — Click/tap to explore
+- Clicking or tapping a country opens a story panel (sidebar on desktop, bottom drawer on mobile)
+- Tap behavior is identical to click — no separate mobile interaction model needed
+- The panel shows: country name, flag emoji, region, and the 3 most recent GDELT stories for that country
+- Each story shows: headline, source, date, and a "Read more →" link to the original article
+- Panel is dismissible. Clicking/tapping another country replaces it.
+
+STEP 2C — Story count layer
+- Countries should visually encode how many stories they have — not just highlighted/not highlighted
+- Use opacity or color intensity to show volume: more stories = more vivid highlight
+- This makes the coverage gap visible without editorializing — the map shows it, the user notices it
+
+STEP 2D — Persistent search bar
+- Add a search bar fixed to the top of the page, visible at all times
+- Search inputs:
+  - Free text keyword field
+  - Country/region dropdown with autocomplete (populated from our GeoJSON country list — no extra API needed)
+  - Date range selector: Last 7 days / Last 30 days / Last 90 days / All time
+  - Topic category dropdown with these user-facing labels: Conflict & War, War Crimes & Genocide, Elections & Democracy, Economics & Trade, Labor & Unions, Industry & Corporate Power, Climate & Environment, Human Rights, Public Health
+- When a search is submitted:
+  - A results panel opens to the right of the map (desktop) or as a bottom drawer (mobile)
+  - Countries with matching stories are highlighted on the map in addition to their default story-volume highlight
+  - The panel shows results as story cards: headline, source, country, date, "Read more →"
+- Clearing the search closes the panel and returns the map to default state
+- Important: research how each topic category maps to GDELT's CAMEO codes or GKG themes. Document this mapping in a comment block. Flag any categories where GDELT coverage is weak and note that manual curation or Wikipedia supplementation may be needed for those.
+
+Stop here. Show me the running map AND a working search before moving on. Test the search with at least these queries: "Sudan" (country), "election" (keyword), "Labor & Unions" (topic category), and a date range filter.
+```
+
+---
+
+**Review checklist before Phase 3:**
+- [ ] Map loads fast — under 2 seconds to first render
+- [ ] Story count encoding is visible and legible (more stories = more vivid)
+- [ ] Click-to-explore panel works and shows real GDELT data
+- [ ] Color palette feels serious and editorial, not playful
+- [ ] OpenStreetMap attribution is present
+- [ ] Search bar is persistently visible at the top of the page
+- [ ] All four search inputs work: keyword, country, date range, topic category
+- [ ] Search results highlight matching countries on the map simultaneously
+- [ ] GDELT topic category mapping is documented with gaps flagged
+- [ ] Clearing search returns map to default state
+
+---
+
+## Phase 3 — Featured Story Landing
+
+**Goal:** Build the entry point — the curated featured story or region that greets the user and draws them in.
+
+**Run this prompt:**
+
+---
+
+```
+Read CLAUDE.md before doing anything else.
+
+Phase 3 goal: Build the featured story landing experience — the first thing a user sees.
+
+Design reference: think of how Axios AM Briefing or The Economist's homepage leads with ONE big thing that commands attention. Not a feed. Not a list. One story with weight.
+
+STEP 3A — Featured story component
+- Display a single featured story at the top of the page, above or alongside the map
+- The featured story shows: a large headline, the country and region, the source name, publication date, a 2-3 sentence summary, and a "Read full story →" link
+- Below the summary: a teaser of the Historical Anchor — one sentence of background context, with a "See full background →" that expands it
+
+STEP 3B — Featured story selection logic
+- For v1, surface the featured story using a simple heuristic: the most recent story from GDELT that comes from a country currently underrepresented in US news
+- "Underrepresented" definition for v1: not United States, United Kingdom, France, Germany, China, Russia, Israel — prioritize everything else
+- This is not editorializing — it is a deliberate design choice to surface what is otherwise invisible, stated transparently in the About page
+
+STEP 3C — Region spotlight (alternative entry point)
+- Below the featured story and map, add a "Regions" strip — simple tabs or buttons for: Africa, Americas, Asia, Europe, Oceania
+- Clicking a region filters the map highlights to that region and surfaces the top 3 stories from it
+- This gives users who want to explore by region a fast path in
+
+Stop after 3C. The page should now have: featured story → map → region strip.
+```
+
+---
+
+**Review checklist before Phase 4:**
+- [ ] Featured story feels like an editorial choice, not a random API result
+- [ ] The underrepresented heuristic is working — not defaulting to US/UK/Europe stories
+- [ ] Region strip filters the map correctly
+- [ ] The page hierarchy feels intentional: one big thing, then explore
+
+---
+
+## Phase 4 — Historical Anchor
+
+**Goal:** Build the signature feature — the background section that makes every story feel connected to something real.
+
+**Run this prompt:**
+
+---
+
+```
+Read CLAUDE.md before doing anything else.
+
+Phase 4 goal: Build the Historical Anchor — the background section that appears on every story. This is the feature that makes this tool different from every other news aggregator.
+
+Design philosophy: The Historical Anchor is NOT analysis or opinion. It is context. It answers: "What led to this moment?" in plain language, sourced from Wikipedia and established record. It assumes the user knows nothing and treats that as normal, not condescending.
+
+STEP 4A — Story detail view
+- When a user clicks a story (from the map panel, featured story, or region strip), open a full story detail view
+- This can be a modal, a slide-in panel, or a new route — recommend one based on our stack and the GitHub Pages constraint
+- The detail view shows:
+  - Headline (large)
+  - Source, date, country
+  - 2-3 sentence summary
+  - "Read original article →" link (prominent)
+  - The Historical Anchor section (see 4B)
+  - "More from [Country]" — 3 related stories from the same country
+
+STEP 4B — Historical Anchor section
+- Label: "Background" (not "History", not "Why this matters" — neutral)
+- Content: pull the Wikipedia summary for the country, plus any relevant Wikipedia article for the specific conflict or topic if identifiable from the headline keywords
+- Format: 3-5 sentences maximum. Plain language. No jargon.
+- End with: "Learn more: [Wikipedia link]" and "Read the full story: [original source link]"
+- If no relevant Wikipedia content is found, show: "Background context not available for this story."
+
+STEP 4C — Conflict-specific context (stretch goal for this phase)
+- For major ongoing conflicts (Sudan, Myanmar, Gaza, Ukraine, DRC, Haiti, Venezuela), maintain a small hardcoded JSON file with a manually written 3-5 sentence background
+- This ensures quality for the highest-stakes stories and doesn't depend on Wikipedia API availability
+- Label these: "Background (editorial)" to be transparent that they were written by the tool's author
+
+Stop after 4C. Test the Historical Anchor against at least 5 different stories from 5 different countries.
+```
+
+---
+
+**Review checklist before Phase 5:**
+- [ ] Historical Anchor appears on every story without exception
+- [ ] Content is plain language — readable by someone with no background
+- [ ] Wikipedia attribution is present
+- [ ] Conflict-specific hardcoded contexts exist for at least 5 major ongoing situations
+- [ ] The section never editorializes — it contextualizes
+
+---
+
+## Phase 5 — Multi-Source Coverage View
+
+**Goal:** Show the same event as covered by different sources — the Ground News-inspired layer that reveals how framing differs by geography.
+
+**Run this prompt:**
+
+---
+
+```
+Read CLAUDE.md before doing anything else.
+
+Phase 5 goal: Add the multi-source coverage layer — showing how the same event is covered differently across sources.
+
+Note: Unlike Ground News (which segments by political lean), this tool segments by geography — local press vs. international press. The goal is not to say one is right. It is to show that the same event looks different depending on who is telling the story.
+
+STEP 5A — Story clustering
+- Group GDELT results that appear to be about the same event (same country, similar timeframe, overlapping keywords)
+- For each cluster, show: how many sources covered it, from how many countries
+- Display this on the story card as a simple indicator: "Covered by 12 sources across 8 countries"
+
+STEP 5B — Coverage angles panel
+- In the story detail view, add a "How it's being covered" section
+- Show 2-4 headlines about the same event from different source countries
+- Label each by source country flag and outlet name
+- No commentary on the differences — just show them side by side and let the user notice
+
+STEP 5C — Coverage gap indicator (map layer)
+- Add a toggle to the map: "Show coverage gaps"
+- When toggled on, countries with active situations but very few international sources covering them are highlighted differently
+- Label: "Limited international coverage" — not "ignored" or "forgotten" (neutral language)
+- This makes the silence visible without editorializing about why
+
+Stop after 5C. This is the most technically complex phase — take it slowly.
+```
+
+---
+
+**Review checklist before Phase 6:**
+- [ ] Story clustering is grouping related events correctly (not over-clustering unrelated stories)
+- [ ] Coverage angles panel shows real variation — not just the same headline from different outlets
+- [ ] Coverage gap toggle is working and visually distinct
+- [ ] Language throughout is neutral — no framing of gaps as intentional neglect
+
+---
+
+## Phase 6 — Polish & Deploy to GitHub Pages
+
+**Run this prompt:**
+
+---
+
+```
+Read CLAUDE.md before doing anything else.
+
+Phase 6 goal: Polish, accessibility, and deployment to GitHub Pages.
+
+STEP 6A — Accessibility
+- Run axe-core or equivalent accessibility audit
+- Fix all critical and serious issues
+- Requirements: keyboard navigation throughout, all map interactions have keyboard alternatives, color contrast meets WCAG AA, screen reader landmarks in place, flag emojis have text alternatives
+
+STEP 6B — Performance
+- Map must render in under 2 seconds on a standard connection
+- Implement response caching for GDELT and Wikipedia calls to avoid hammering free APIs and improve speed
+- Lazy load anything that isn't in the initial viewport
+
+STEP 6C — About page
+- Include:
+  - The project soul paragraph (verbatim from CLAUDE.md)
+  - Transparent explanation of the featured story selection logic (why underrepresented countries are prioritized)
+  - Data source attributions: GDELT, Wikipedia, Wikidata, OpenStreetMap — all require attribution
+  - "This tool is non-commercial and built for public education"
+  - Link to GitHub repo
+
+STEP 6D — GitHub Pages deployment
+- Set up GitHub Actions workflow to build and deploy to GitHub Pages on push to main
+- Ensure all API calls work from the deployed domain (watch for CORS differences between localhost and GitHub Pages)
+- Provide the public URL and a one-page deployment runbook I can follow for future updates
+
+After deployment, add a post-mortem section to CLAUDE.md:
+- What was built in v1
+- What was intentionally left out and why
+- What v2 would prioritize
+```
+
+---
+
+## Future Phases (Backlog — Do Not Build in v1)
+
+**Power web (v2 priority):** Visualize how governments, corporations, billionaires, and institutions are connected to a story. This is the systems-thinking feature that serves your deepest learning objective — helping users see how politics, economics, and power interconnect. Requires a knowledge graph data source (Wikidata relationships, or manual curation for major actors).
+
+**"What the US covered vs. didn't" (v2):** Compare GDELT coverage volume for a country against US-origin sources specifically. Make the silence visible with data, not assertion.
+
+**Timeline view (v3):** Show how a conflict has evolved over months or years — not just today's headline but the arc.
+
+**Language toggle (v3):** Same story, local press vs. international press, side by side with translation.
+
+---
+
+## Session Startup Ritual
+
+At the start of every Claude Code session, paste this exactly:
+
+```
+Read CLAUDE.md before doing anything else. Then tell me:
+1. What phase are we in?
+2. What was the last thing completed?
+3. What is the next step?
+4. Are there any open TODOs or unresolved decisions from the last session?
+```
+
+---
+
+## Design Principles (Non-Negotiable)
+
+These apply to every phase, every decision, every line of UI copy:
+
+- **Neutral voice.** The tool presents facts. It does not tell users what to think.
+- **Gateway, not destination.** Always a clear path to real sources. Never trap the user.
+- **Map as discovery.** Exploration is the primary interaction. Search is secondary.
+- **Historical anchor always.** No story appears without context. Nothing feels random.
+- **Serious aesthetic.** Dark, editorial, weighted. This is not a travel app or a game.
+- **Assume nothing.** The user does not know where Sudan is. That is okay. Explain it.
+
+---
+
+*Built slowly. Built with purpose. Built for the person who is still learning.*
