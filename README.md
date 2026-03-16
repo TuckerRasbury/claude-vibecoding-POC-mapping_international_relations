@@ -1,5 +1,7 @@
 # Claude Vibecoding - Proof of Concept Mapping International Relations and News - (WORK IN PROGRESS as of March 2026)
-I want to make international relations easier to understand for Americans. The ignorance and lack of empathy of the people of the United States must be fought. Dataviz is a great way to fight that apathy, at best, because it has the power to crack through the hateful scripts of supremacy and hegemony and disinformation. Now let's ask AI to build it
+I want to make international relations easier to understand for Americans. The ignorance and lack of empathy of the people of the United States must be fought. Dataviz is a great way to fight that apathy, at best, because it has the power to crack through the hateful scripts of supremacy and hegemony and disinformation. I want to be able to drop in a fun piece of local news in a remote village, a story on gelato in Italy, or something serious and multifaceted like the pentagon papersvietnam papers/the epstein files. Protect people who need to be protected, but illuminate that which is hidden and impure.
+
+Now let's ask AI to build it.
 
 Subsequently, the objectives of this project are simple:
 1) _create an educational tool_
