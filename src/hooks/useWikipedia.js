@@ -106,6 +106,54 @@ function trimToSentences(text, n) {
 }
 
 /**
+ * Fetches the dedicated history article for a country.
+ * Tries "History of {countryName}" first, falls back to "{countryName}" itself.
+ * Returns a WikiSummary with the full extract (not trimmed to 3 sentences).
+ *
+ * @param {string} countryName - e.g. "Sudan"
+ * @returns {WikiSummary|null}
+ */
+export async function fetchHistoryArticle(countryName) {
+  if (!countryName) return null
+
+  const candidates = [
+    `History of ${countryName}`,
+    `${countryName}`,
+  ]
+
+  for (const title of candidates) {
+    const encoded = encodeURIComponent(title.replace(/ /g, '_'))
+    const cacheKey = `wiki:history:${encoded}`
+    const cached = getCached(cacheKey)
+    if (cached !== null) return cached
+
+    try {
+      const res = await fetch(`${WIKI_BASE}/page/summary/${encoded}`, {
+        headers: { 'Accept': 'application/json' },
+      })
+      if (!res.ok) continue
+      const json = await res.json()
+      // Skip disambiguation pages
+      if (json.type === 'disambiguation') continue
+
+      const result = {
+        title: json.title ?? title,
+        extract: json.extract ?? null,
+        extractShort: trimToSentences(json.extract, 5),
+        thumbnail: json.thumbnail?.source ?? null,
+        pageUrl: json.content_urls?.desktop?.page ?? `https://en.wikipedia.org/wiki/${encoded}`,
+        attribution: 'Content from Wikipedia, licensed under CC BY-SA 4.0',
+      }
+      setCache(cacheKey, result)
+      return result
+    } catch {
+      continue
+    }
+  }
+  return null
+}
+
+/**
  * React hook — fetches a Wikipedia summary reactively.
  * @param {string|null} title - Wikipedia article title
  */
