@@ -1,19 +1,66 @@
-import { useState } from 'react'
+/**
+ * App.jsx
+ *
+ * Layout:
+ *   ┌─────────────────────────────────────────┐
+ *   │ FeaturedStory (top bar, live from GDELT) │
+ *   ├─────────────────────────────────────────┤
+ *   │                                         │
+ *   │           MapView (full height)         │
+ *   │                                         │
+ *   └─────────────────────────────────────────┘
+ *                              ↑
+ *                   StoryPanel slides in from right
+ *                   when a country is clicked
+ *
+ * State:
+ *   selectedCountry: { iso3, iso2, name } | null
+ */
 
-// Phase 1: Data layer scaffold — UI wired up in Phase 2
-function App() {
+import { useState, useCallback } from 'react'
+import MapView from './components/Map/MapView.jsx'
+import FeaturedStory from './components/FeaturedStory.jsx'
+import StoryPanel from './components/Story/StoryPanel.jsx'
+
+export default function App() {
+  const [selectedCountry, setSelectedCountry] = useState(null)
+
+  const handleCountryClick = useCallback((country) => {
+    setSelectedCountry(country)
+  }, [])
+
+  const handleClose = useCallback(() => {
+    setSelectedCountry(null)
+  }, [])
+
   return (
-    <div className="min-h-screen bg-[#0a0f1e] text-slate-200 flex items-center justify-center">
-      <div className="text-center max-w-lg px-6">
-        <h1 className="text-3xl font-serif text-amber-400 mb-4">Curiosity Engine</h1>
-        <p className="text-slate-400 text-sm leading-relaxed">
-          An interactive map for curious Americans exploring international news,
-          conflict, and history for the first time.
-        </p>
-        <p className="text-slate-600 text-xs mt-6">Phase 1 — Data layer building…</p>
+    <div className="flex flex-col h-screen bg-[#0a0f1e] overflow-hidden">
+      {/* Top bar: live featured story from GDELT */}
+      <FeaturedStory onCountryClick={handleCountryClick} />
+
+      {/* Map — fills remaining height */}
+      <div className="flex-1 relative min-h-0">
+        <MapView
+          onCountryClick={handleCountryClick}
+          selectedIso3={selectedCountry?.iso3 ?? null}
+        />
+
+        {/* Branding watermark */}
+        <div className="absolute bottom-8 left-4 z-[500] pointer-events-none select-none">
+          <p className="text-xs text-slate-700 font-serif tracking-wide">
+            Curiosity Engine
+          </p>
+          <p className="text-[10px] text-slate-800 mt-0.5">
+            Click any country to explore
+          </p>
+        </div>
       </div>
+
+      {/* Story panel — slides in from right */}
+      <StoryPanel
+        country={selectedCountry}
+        onClose={handleClose}
+      />
     </div>
   )
 }
-
-export default App

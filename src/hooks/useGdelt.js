@@ -32,7 +32,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { parseArtListResponse } from '../utils/gdeltParser.js'
-import { fipsToIso3 } from '../utils/countryCodeMap.js'
+import { fipsToIso3, FIPS_TO_ISO } from '../utils/countryCodeMap.js'
 
 const GDELT_BASE = 'https://api.gdeltproject.org/api/v2/doc/doc'
 
@@ -224,7 +224,7 @@ export async function fetchFeaturedStory() {
     for (const article of articles) {
       const srcCountry = article.sourcecountry ?? ''
       const srcIso3 = srcCountry
-        ? (Object.values(await import('../utils/countryCodeMap.js').then(m => m.FIPS_TO_ISO))
+        ? (Object.values(FIPS_TO_ISO)
             .find(v => v.name.toLowerCase() === srcCountry.toLowerCase())?.iso3 ?? null)
         : null
 
