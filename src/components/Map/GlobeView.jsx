@@ -51,7 +51,7 @@ function getCentroid(geometry) {
   return { lat: sumLat / ring.length, lng: sumLng / ring.length }
 }
 
-export default function GlobeView({ onCountryClick, selectedIso3, activeCountries = new Set(), searchHighlights = new Set() }) {
+export default function GlobeView({ onCountryClick, selectedIso3, activeCountries = new Set(), searchHighlights = new Set(), historicalHighlights = new Set(), historianMode = false }) {
   const globeRef   = useRef()
   const containerRef = useRef()
   const [geojson, setGeojson]         = useState(null)
@@ -113,27 +113,33 @@ export default function GlobeView({ onCountryClick, selectedIso3, activeCountrie
         polygonGeoJsonGeometry={feat => feat.geometry}
         polygonAltitude={feat => {
           const iso3 = getIso3(feat.properties)
-          if (iso3 === selectedIso3)               return 0.02
-          if (feat === hoverFeature)               return 0.015
-          if (iso3 && searchHighlights.has(iso3)) return 0.014
-          if (iso3 && activeCountries.has(iso3))  return 0.009
+          if (iso3 === selectedIso3)                  return 0.02
+          if (feat === hoverFeature)                  return 0.015
+          if (iso3 && historicalHighlights.has(iso3)) return 0.014
+          if (iso3 && searchHighlights.has(iso3))     return 0.014
+          if (iso3 && activeCountries.has(iso3))      return 0.009
           return 0.006
         }}
         polygonCapColor={feat => {
           const iso3 = getIso3(feat.properties)
-          if (iso3 === selectedIso3)               return 'rgba(232, 148, 58, 0.75)'
-          if (feat === hoverFeature)               return 'rgba(44, 62, 100, 0.9)'
-          if (iso3 && searchHighlights.has(iso3)) return 'rgba(20, 160, 160, 0.65)'
-          if (iso3 && activeCountries.has(iso3))  return 'rgba(120, 60, 20, 0.55)'
+          if (iso3 === selectedIso3)                  return 'rgba(232, 148, 58, 0.75)'
+          if (feat === hoverFeature)                  return 'rgba(44, 62, 100, 0.9)'
+          if (iso3 && historicalHighlights.has(iso3)) return 'rgba(212, 175, 55, 0.65)'
+          if (iso3 && searchHighlights.has(iso3))     return 'rgba(20, 160, 160, 0.65)'
+          // Dim amber news glow when historian mode is active to reduce visual noise
+          if (iso3 && activeCountries.has(iso3))
+            return historianMode ? 'rgba(80, 40, 10, 0.3)' : 'rgba(120, 60, 20, 0.55)'
           return 'rgba(22, 32, 58, 0.7)'
         }}
         polygonSideColor={() => 'rgba(45, 58, 82, 0.25)'}
         polygonStrokeColor={feat => {
           const iso3 = getIso3(feat.properties)
-          if (iso3 === selectedIso3)               return '#e8943a'
-          if (feat === hoverFeature)               return '#c97b2e'
-          if (iso3 && searchHighlights.has(iso3)) return '#14a0a0'
-          if (iso3 && activeCountries.has(iso3))  return '#8b4513'
+          if (iso3 === selectedIso3)                  return '#e8943a'
+          if (feat === hoverFeature)                  return '#c97b2e'
+          if (iso3 && historicalHighlights.has(iso3)) return '#d4af37'
+          if (iso3 && searchHighlights.has(iso3))     return '#14a0a0'
+          if (iso3 && activeCountries.has(iso3))
+            return historianMode ? '#3a200a' : '#8b4513'
           return '#2d3a52'
         }}
         onPolygonHover={feat => setHoverFeature(feat ?? null)}
