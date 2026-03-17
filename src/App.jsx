@@ -18,7 +18,7 @@
  */
 
 import { useState, useCallback } from 'react'
-import MapView from './components/Map/MapView.jsx'
+import GlobeView from './components/Map/GlobeView.jsx'
 import FeaturedStory from './components/FeaturedStory.jsx'
 import StoryPanel from './components/Story/StoryPanel.jsx'
 
@@ -40,7 +40,7 @@ export default function App() {
 
       {/* Map — fills remaining height */}
       <div className="flex-1 relative min-h-0">
-        <MapView
+        <GlobeView
           onCountryClick={handleCountryClick}
           selectedIso3={selectedCountry?.iso3 ?? null}
         />
