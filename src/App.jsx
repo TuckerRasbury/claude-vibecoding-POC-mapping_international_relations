@@ -21,9 +21,11 @@ import { useState, useCallback } from 'react'
 import GlobeView from './components/Map/GlobeView.jsx'
 import FeaturedStory from './components/FeaturedStory.jsx'
 import StoryPanel from './components/Story/StoryPanel.jsx'
+import { useGlobalActivity } from './hooks/useGlobalActivity.js'
 
 export default function App() {
   const [selectedCountry, setSelectedCountry] = useState(null)
+  const { activeCountries } = useGlobalActivity()
 
   const handleCountryClick = useCallback((country) => {
     setSelectedCountry(country)
@@ -43,6 +45,7 @@ export default function App() {
         <GlobeView
           onCountryClick={handleCountryClick}
           selectedIso3={selectedCountry?.iso3 ?? null}
+          activeCountries={activeCountries}
         />
 
         {/* Branding watermark */}
@@ -51,7 +54,7 @@ export default function App() {
             Curiosity Engine
           </p>
           <p className="text-[10px] text-slate-800 mt-0.5">
-            Click any country to explore
+            Glowing countries have recent news · Click to explore
           </p>
         </div>
       </div>
