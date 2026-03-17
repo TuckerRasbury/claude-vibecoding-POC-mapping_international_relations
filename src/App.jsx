@@ -21,11 +21,13 @@ import { useState, useCallback } from 'react'
 import GlobeView from './components/Map/GlobeView.jsx'
 import FeaturedStory from './components/FeaturedStory.jsx'
 import StoryPanel from './components/Story/StoryPanel.jsx'
+import TopicFilter from './components/TopicFilter.jsx'
 import { useGlobalActivity } from './hooks/useGlobalActivity.js'
 
 export default function App() {
   const [selectedCountry, setSelectedCountry] = useState(null)
-  const { activeCountries } = useGlobalActivity()
+  const [selectedTopic, setSelectedTopic] = useState(null)
+  const { activeCountries } = useGlobalActivity(selectedTopic)
 
   const handleCountryClick = useCallback((country) => {
     setSelectedCountry(country)
@@ -39,6 +41,9 @@ export default function App() {
     <div className="flex flex-col h-screen bg-[#0a0f1e] overflow-hidden">
       {/* Top bar: live featured story from GDELT */}
       <FeaturedStory onCountryClick={handleCountryClick} />
+
+      {/* Topic filter pills */}
+      <TopicFilter selected={selectedTopic} onChange={setSelectedTopic} />
 
       {/* Map — fills remaining height */}
       <div className="flex-1 relative min-h-0">
