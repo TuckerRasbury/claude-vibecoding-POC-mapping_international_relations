@@ -5,16 +5,24 @@
  *   ┌─────────────────────────────────────────┐
  *   │ FeaturedStory (top bar, live from GDELT) │
  *   ├─────────────────────────────────────────┤
+ *   │ SearchBar (keyword · country · date · topic) │
+ *   ├─────────────────────────────────────────┤
+ *   │ TopicFilter (quick globe-filter pills)  │
+ *   ├─────────────────────────────────────────┤
  *   │                                         │
- *   │           MapView (full height)         │
+ *   │           GlobeView (full height)       │
  *   │                                         │
  *   └─────────────────────────────────────────┘
  *                              ↑
- *                   StoryPanel slides in from right
- *                   when a country is clicked
+ *   SearchResultsPanel or StoryPanel slides in from right
  *
  * State:
- *   selectedCountry: { iso3, iso2, name } | null
+ *   selectedCountry  — controls StoryPanel (map click)
+ *   searchParams     — controls SearchResultsPanel (search submit)
+ *   searchHighlights — Set<iso3> passed to GlobeView for teal highlight
+ *
+ * Priority: StoryPanel takes precedence over SearchResultsPanel.
+ * Clicking a country while search is active opens StoryPanel, not results.
  */
 
 import { useState, useCallback } from 'react'
@@ -22,19 +30,39 @@ import GlobeView from './components/Map/GlobeView.jsx'
 import FeaturedStory from './components/FeaturedStory.jsx'
 import StoryPanel from './components/Story/StoryPanel.jsx'
 import TopicFilter from './components/TopicFilter.jsx'
+import SearchBar from './components/Search/SearchBar.jsx'
+import SearchResultsPanel from './components/Search/SearchResultsPanel.jsx'
 import { useGlobalActivity } from './hooks/useGlobalActivity.js'
 
 export default function App() {
-  const [selectedCountry, setSelectedCountry] = useState(null)
-  const [selectedTopic, setSelectedTopic] = useState(null)
+  const [selectedCountry, setSelectedCountry]   = useState(null)
+  const [selectedTopic, setSelectedTopic]       = useState(null)
+  const [searchParams, setSearchParams]         = useState(null)
+  const [searchHighlights, setSearchHighlights] = useState(new Set())
+
   const { activeCountries } = useGlobalActivity(selectedTopic)
 
   const handleCountryClick = useCallback((country) => {
     setSelectedCountry(country)
   }, [])
 
-  const handleClose = useCallback(() => {
+  const handleStoryPanelClose = useCallback(() => {
     setSelectedCountry(null)
+  }, [])
+
+  const handleSearch = useCallback((params) => {
+    setSearchParams(params)
+    setSelectedCountry(null) // close StoryPanel if open
+  }, [])
+
+  const handleSearchClear = useCallback(() => {
+    setSearchParams(null)
+    setSearchHighlights(new Set())
+  }, [])
+
+  const handleSearchResultsClose = useCallback(() => {
+    setSearchParams(null)
+    setSearchHighlights(new Set())
   }, [])
 
   return (
@@ -42,7 +70,14 @@ export default function App() {
       {/* Top bar: live featured story from GDELT */}
       <FeaturedStory onCountryClick={handleCountryClick} />
 
-      {/* Topic filter pills */}
+      {/* Search bar — always visible */}
+      <SearchBar
+        onSearch={handleSearch}
+        onClear={handleSearchClear}
+        isActive={!!searchParams}
+      />
+
+      {/* Topic filter pills — quick globe filter, no results panel */}
       <TopicFilter selected={selectedTopic} onChange={setSelectedTopic} />
 
       {/* Map — fills remaining height */}
@@ -51,6 +86,7 @@ export default function App() {
           onCountryClick={handleCountryClick}
           selectedIso3={selectedCountry?.iso3 ?? null}
           activeCountries={activeCountries}
+          searchHighlights={searchHighlights}
         />
 
         {/* Branding watermark */}
@@ -64,10 +100,18 @@ export default function App() {
         </div>
       </div>
 
-      {/* Story panel — slides in from right */}
+      {/* Search results panel — slides in from right when search is active */}
+      <SearchResultsPanel
+        searchParams={searchParams}
+        onClose={handleSearchResultsClose}
+        onCountryClick={handleCountryClick}
+        onHighlightsChange={setSearchHighlights}
+      />
+
+      {/* Story panel — slides in from right when a country is clicked */}
       <StoryPanel
         country={selectedCountry}
-        onClose={handleClose}
+        onClose={handleStoryPanelClose}
       />
     </div>
   )
