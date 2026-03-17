@@ -1,16 +1,23 @@
-# Curiosity Engine
+# Claude Vibecoding — Proof of Concept: Mapping International Relations and News
 
-> An interactive 3D globe for curious Americans exploring international news, conflict, and history for the first time.
+> *(Work in progress as of March 2026)*
 
-**Status:** Work in progress · March 2026
+An interactive 3D globe for curious Americans exploring international news, conflict, and history for the first time.
 
 ---
 
 ## Why this exists
 
-Built for the version of me that was learning to think about politics, war, history, and conflict with a global mental map for the first time. The goal is simple: someone in the US opens this, encounters an atrocity, a conflict, or a people they had never heard of, and leaves wanting to read more.
+I want to make international relations easier to understand for Americans. The ignorance and lack of empathy of the people of the United States must be fought. Dataviz is a great way to fight that apathy, at best, because it has the power to crack through the hateful scripts of supremacy and hegemony and disinformation. I want to be able to drop in a fun piece of local news in a remote village, a story on gelato in Italy, or something serious and multifaceted like the Pentagon Papers, the Vietnam Papers, the Epstein files. Protect people who need to be protected, but illuminate that which is hidden and impure.
 
-Dataviz has the power to crack through apathy. This is one attempt at that.
+Now let's ask AI to build it.
+
+Subsequently, the objectives of this project are simple:
+
+1. _Create an educational tool_
+2. _Scratch the itch for my data, creative, and news-oriented interests_
+3. _Gain experience using Claude Code and other AI agents_
+4. Gain experience doing **"AI-assisted software engineering"** (as opposed to vibe coding, which traditionally requires less investment in preplanning)
 
 ---
 
@@ -182,6 +189,4 @@ This project is intentionally simple. Before making changes:
 
 ## Origin
 
-Started as a vibe-coded proof of concept in March 2026 by an analytics engineer who wanted to fight American ignorance about international affairs with data visualization — and who wanted a reason to learn AI-assisted software engineering properly.
-
-Built with Claude Code (Anthropic).
+Started in March 2026 by an analytics engineer. Built with Claude Code (Anthropic).
