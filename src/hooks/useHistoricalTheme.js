@@ -179,6 +179,59 @@ export const HISTORICAL_THEMES = [
       'SDN','TZA','EGY','IND','USA','SWE','FRA','GBR','GRC','AUT',
     ]),
   },
+  {
+    id: 'unions',
+    label: 'Labor & Unions',
+    icon: '✊',
+    description: 'Countries with defining labor movements, general strikes, and workers\' rights history',
+    wikiTitle: 'Labour movement',
+    countries: new Set([
+      // Birthplaces of organized labor
+      'GBR',  // Chartism, General Strike 1926, TUC
+      'USA',  // Haymarket Affair, IWW, AFL-CIO, UAW
+      'FRA',  // CGT, May '68, long tradition of syndicalism
+      'DEU',  // First modern trade unions, Weimar labor law, IG Metall
+      'AUS',  // 8-hour day movement (1856), strong union tradition
+      'NZL',  // Waterfront strike 1951, early labor protections
+      // Scandinavia — codetermination models
+      'SWE','NOR','DNK','FIN',
+      // Continental Europe
+      'ITA',  // Hot Autumn 1969, CGIL, anarcho-syndicalist roots
+      'ESP',  // CNT, anarcho-syndicalism, Franco's union suppression
+      'BEL','NLD','CHE','AUT',
+      // Eastern Europe — union as resistance
+      'POL',  // Solidarność (Solidarity) — landmark in Cold War and labor history
+      'HUN',  // 1956 workers' councils
+      'CZE',  // Prague Spring had strong labor components
+      'ROU',  // Jiu Valley miners' strikes
+      'RUS',  // Bolshevism, early Soviet labor, 1905 general strike
+      // Latin America
+      'BRA',  // CUT, PT origins in ABC steelworkers' union (Lula)
+      'ARG',  // CGT, Peronism, repeated union clashes
+      'CHL',  // Copper miners, brutal Pinochet union suppression
+      'BOL',  // Tin miners (FSTMB), COB federation
+      'MEX',  // CTM, Zapatista adjacent labor struggles
+      'COL',  // Banana plantation strikes (United Fruit), ongoing assassinations of unionists
+      // Asia
+      'IND',  // AITUC, textile workers, tea plantation workers
+      'KOR',  // KCTU, democracy movement driven by labor
+      'BGD',  // Garment workers, Rana Plaza disaster
+      'JPN',  // Sohyo federation, postwar labor law
+      'CHN',  // Early labor history, 1920s general strikes; contemporary suppression
+      'PHL',  // KMU, labor export economy
+      // Africa
+      'ZAF',  // COSATU, NUM — central to the anti-apartheid movement
+      'NGA',  // NLC, oil workers' strikes
+      'GHA',  // Ghana TUC, Nkrumah-era labor politics
+      'ETH',  // CETU under Derg, subsequent suppression
+      // Middle East & North Africa
+      'EGY',  // Textile workers, Mahalla, role in Arab Spring
+      'TUN',  // UGTT — only surviving civil society institution after revolution
+      'IRN',  // Oil workers' strike (1978–79) triggered the Islamic Revolution
+      // Canada
+      'CAN',  // Winnipeg General Strike 1919, auto workers, CAW
+    ]),
+  },
 ]
 
 // Quick lookup by id

@@ -30,7 +30,25 @@ The homepage opens on a spinning dark globe. Countries that have recent news act
 - **Structured facts** (capital, population, region) from Wikidata
 - **Source links** — paths out to real journalism and Wikipedia articles
 
-There is also a persistent **search bar** at the top for investigators: search by keyword, country, date range, and topic category. Matched countries glow teal on the globe.
+There is also a persistent **search bar** at the top: search by keyword, country, date range, and topic category. Matched countries glow teal on the globe.
+
+### Historian Mode
+
+Toggle **📜 Historian Mode** to shift the globe from breaking news to deep history. Select a theme — and the relevant countries light up in gold:
+
+| Theme | What lights up |
+|---|---|
+| Colonialism | ~80 countries that experienced European colonial rule |
+| Cold War | Proxy war battlegrounds and occupied states (1947–91) |
+| Genocide & Atrocity | Countries where mass killings and ethnic cleansing occurred |
+| Slave Trade | West/East African source countries, American destinations, colonial perpetrators |
+| Revolution & Coup | 20th/21st century uprisings, coups d'état, and revolutions |
+| Nuclear Age | Weapons states, testing sites, and abandoned programs |
+| Famine | Countries struck by major historical food crises |
+| Refugee Crisis | Major source and host countries across modern history |
+| Labor & Unions | Countries with defining strikes, unions, and workers' rights movements |
+
+Selecting a theme surfaces a brief plain-language intro from Wikipedia and a count of highlighted countries. Click any gold country to open its story panel. The news glow dims so history takes the foreground.
 
 Every feature decision must serve at least one of four learning objectives:
 
@@ -99,12 +117,15 @@ curiosity-engine/
 │   │   │   └── BackgroundSection.jsx  # Wikipedia summary as historical anchor
 │   │   ├── FeaturedStory.jsx          # Top bar: live curated story from GDELT
 │   │   ├── TopicFilter.jsx            # Quick-filter pills (Conflict, Elections, etc.)
+│   │   ├── HistorianModeBar.jsx       # Historian Mode toggle + historical theme pills
+│   │   ├── ThemeSummaryCard.jsx       # Floating globe overlay: theme intro + country count
 │   │   └── SourceLinks.jsx            # "Go deeper" links to Wikipedia + related articles
 │   ├── hooks/
 │   │   ├── useGdelt.js                # Fetches and normalizes GDELT article lists
 │   │   ├── useGlobalActivity.js       # Single broad query → Set<iso3> for globe glow
 │   │   ├── useWikipedia.js            # Wikipedia page summary + related articles
-│   │   └── useWikidata.js             # Wikidata SPARQL: capital, population, region
+│   │   ├── useWikidata.js             # Wikidata SPARQL: capital, population, region
+│   │   └── useHistoricalTheme.js      # Curated ISO3 lists per historical theme + Wikipedia hook
 │   ├── utils/
 │   │   ├── gdeltParser.js             # Normalizes raw GDELT JSON → NewsStory objects
 │   │   └── countryCodeMap.js          # FIPS 10-4 ↔ ISO 3166-1 alpha-2/3 + display names
@@ -153,6 +174,7 @@ curiosity-engine/
 |---|---|
 | Amber glow | Country has recent GDELT news activity (last 14 days) |
 | Teal glow | Country matches an active search query |
+| Gold glow | Country is part of the active Historian Mode theme |
 | Bright amber / raised | Currently selected country (StoryPanel is open) |
 | Dark navy | No recent data |
 
