@@ -27,13 +27,14 @@ for (const v of Object.values(FIPS_TO_ISO)) {
 
 // Topic → GDELT keyword query (mirrors TOPIC_TO_GDELT_QUERY in useGdelt.js)
 const TOPIC_QUERIES = {
-  'Conflict & War':         'conflict war military attack',
-  'War Crimes & Genocide':  'genocide "war crime" atrocity massacre',
-  'Elections & Democracy':  'election democracy vote parliament',
-  'Economics & Trade':      'economy trade sanctions tariff currency',
-  'Climate & Environment':  'climate environment deforestation flood drought',
-  'Human Rights':           '"human rights" refugee displacement abuse',
-  'Public Health':          'health pandemic disease epidemic',
+  'Conflict & War':           'conflict war military attack',
+  'War Crimes & Genocide':    'genocide "war crime" atrocity massacre',
+  'Elections & Democracy':    'election democracy vote parliament',
+  'Economics & Trade':        'economy trade sanctions tariff currency',
+  'Climate & Environment':    'climate environment deforestation flood drought',
+  'Human Rights':             '"human rights" refugee displacement abuse',
+  'Public Health':            'health pandemic disease epidemic',
+  'Industry & Corporate Power': 'corporate industry workers labor strike monopoly',
 }
 
 const DEFAULT_QUERY = 'conflict crisis election protest war humanitarian disaster'

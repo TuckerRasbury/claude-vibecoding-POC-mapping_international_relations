@@ -154,10 +154,11 @@ export default function App() {
         onHighlightsChange={setSearchHighlights}
       />
 
-      {/* Country story panel */}
+      {/* Country story panel — opens on History tab when Historian Mode is active */}
       <StoryPanel
         country={selectedCountry}
         onClose={handleStoryPanelClose}
+        initialTab={historianMode ? 'history' : 'news'}
       />
     </div>
   )

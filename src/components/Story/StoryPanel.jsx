@@ -32,15 +32,15 @@ function formatPopulation(n) {
   return String(n)
 }
 
-export default function StoryPanel({ country, onClose }) {
+export default function StoryPanel({ country, onClose, initialTab = 'news' }) {
   const [relatedLinks, setRelatedLinks] = useState([])
   const [activeTab, setActiveTab] = useState('news') // 'news' | 'history'
   const isOpen = !!country
 
-  // Reset to News tab whenever a new country is opened
+  // Reset to the appropriate tab whenever a new country is opened
   useEffect(() => {
-    if (country) setActiveTab('news')
-  }, [country?.iso3])
+    if (country) setActiveTab(initialTab)
+  }, [country?.iso3, initialTab])
 
   // Fetch stories from GDELT
   const { stories, loading: storiesLoading } = useGdelt({
@@ -200,6 +200,8 @@ export default function StoryPanel({ country, onClose }) {
                   {/* Source links */}
                   <SourceLinks
                     wikiUrl={wikiSummary?.pageUrl}
+                    articleUrl={stories[0]?.url}
+                    articleDomain={stories[0]?.source}
                     related={relatedLinks}
                   />
                 </>
