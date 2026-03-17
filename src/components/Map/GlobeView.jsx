@@ -16,6 +16,7 @@
  * Props:
  *   onCountryClick({ iso3, iso2, name }) — called when user clicks a country
  *   selectedIso3 — ISO3 of the currently selected country (or null)
+ *   activeCountries — Set<iso3> of countries with recent GDELT news (from useGlobalActivity)
  */
 
 import { useRef, useEffect, useState } from 'react'
@@ -50,7 +51,7 @@ function getCentroid(geometry) {
   return { lat: sumLat / ring.length, lng: sumLng / ring.length }
 }
 
-export default function GlobeView({ onCountryClick, selectedIso3 }) {
+export default function GlobeView({ onCountryClick, selectedIso3, activeCountries = new Set() }) {
   const globeRef   = useRef()
   const containerRef = useRef()
   const [geojson, setGeojson]         = useState(null)
@@ -112,21 +113,24 @@ export default function GlobeView({ onCountryClick, selectedIso3 }) {
         polygonGeoJsonGeometry={feat => feat.geometry}
         polygonAltitude={feat => {
           const iso3 = getIso3(feat.properties)
-          if (iso3 === selectedIso3) return 0.02
-          if (feat === hoverFeature)  return 0.015
+          if (iso3 === selectedIso3)      return 0.02
+          if (feat === hoverFeature)       return 0.015
+          if (iso3 && activeCountries.has(iso3)) return 0.009
           return 0.006
         }}
         polygonCapColor={feat => {
           const iso3 = getIso3(feat.properties)
-          if (iso3 === selectedIso3) return 'rgba(232, 148, 58, 0.75)'
-          if (feat === hoverFeature)  return 'rgba(44, 62, 100, 0.9)'
+          if (iso3 === selectedIso3)      return 'rgba(232, 148, 58, 0.75)'
+          if (feat === hoverFeature)       return 'rgba(44, 62, 100, 0.9)'
+          if (iso3 && activeCountries.has(iso3)) return 'rgba(120, 60, 20, 0.55)'
           return 'rgba(22, 32, 58, 0.7)'
         }}
         polygonSideColor={() => 'rgba(45, 58, 82, 0.25)'}
         polygonStrokeColor={feat => {
           const iso3 = getIso3(feat.properties)
-          if (iso3 === selectedIso3) return '#e8943a'
-          if (feat === hoverFeature)  return '#c97b2e'
+          if (iso3 === selectedIso3)      return '#e8943a'
+          if (feat === hoverFeature)       return '#c97b2e'
+          if (iso3 && activeCountries.has(iso3)) return '#8b4513'
           return '#2d3a52'
         }}
         onPolygonHover={feat => setHoverFeature(feat ?? null)}
