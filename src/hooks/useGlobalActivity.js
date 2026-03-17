@@ -3,8 +3,10 @@
  *
  * Single GDELT query that returns a Set<iso3> of countries with recent news activity.
  *
- * One request on mount, cached 30 minutes in sessionStorage.
+ * One request on mount (and whenever topicCategory changes), cached 30 min.
  * Uses sourcecountry field from GDELT ArtList results to determine active countries.
+ *
+ * @param {string|null} topicCategory  - Optional topic filter (must match TOPIC_TO_GDELT_QUERY keys)
  *
  * Serves: Discovery — the globe lights up where news is happening.
  */
@@ -13,7 +15,6 @@ import { useState, useEffect } from 'react'
 import { FIPS_TO_ISO } from '../utils/countryCodeMap.js'
 
 const GDELT_BASE = 'https://api.gdeltproject.org/api/v2/doc/doc'
-const CACHE_KEY  = 'gdelt:global-activity'
 const CACHE_TTL  = 30 * 60 * 1000 // 30 minutes
 
 // Build a lookup: country name (lowercase) → iso3
@@ -24,9 +25,27 @@ for (const v of Object.values(FIPS_TO_ISO)) {
   }
 }
 
-function getCached() {
+// Topic → GDELT keyword query (mirrors TOPIC_TO_GDELT_QUERY in useGdelt.js)
+const TOPIC_QUERIES = {
+  'Conflict & War':           'conflict war military attack',
+  'War Crimes & Genocide':    'genocide "war crime" atrocity massacre',
+  'Elections & Democracy':    'election democracy vote parliament',
+  'Economics & Trade':        'economy trade sanctions tariff currency',
+  'Climate & Environment':    'climate environment deforestation flood drought',
+  'Human Rights':             '"human rights" refugee displacement abuse',
+  'Public Health':            'health pandemic disease epidemic',
+  'Industry & Corporate Power': 'corporate industry workers labor strike monopoly',
+}
+
+const DEFAULT_QUERY = 'conflict crisis election protest war humanitarian disaster'
+
+function cacheKey(topic) {
+  return `gdelt:global-activity:${topic ?? 'all'}`
+}
+
+function getCached(key) {
   try {
-    const raw = sessionStorage.getItem(CACHE_KEY)
+    const raw = sessionStorage.getItem(key)
     if (!raw) return null
     const { data, ts } = JSON.parse(raw)
     if (Date.now() - ts < CACHE_TTL) return data
@@ -34,26 +53,32 @@ function getCached() {
   return null
 }
 
-function setCache(data) {
+function setCache(key, data) {
   try {
-    sessionStorage.setItem(CACHE_KEY, JSON.stringify({ data, ts: Date.now() }))
+    sessionStorage.setItem(key, JSON.stringify({ data, ts: Date.now() }))
   } catch {}
 }
 
-export function useGlobalActivity() {
+export function useGlobalActivity(topicCategory = null) {
   const [activeCountries, setActiveCountries] = useState(new Set())
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const cached = getCached()
+    const key = cacheKey(topicCategory)
+    const cached = getCached(key)
     if (cached) {
       setActiveCountries(new Set(cached))
       setLoading(false)
       return
     }
 
+    setLoading(true)
+    const query = (topicCategory && TOPIC_QUERIES[topicCategory])
+      ? TOPIC_QUERIES[topicCategory]
+      : DEFAULT_QUERY
+
     const params = new URLSearchParams({
-      query: 'conflict crisis election protest war humanitarian disaster',
+      query,
       mode: 'ArtList',
       maxrecords: '100',
       timespan: '14d',
@@ -72,12 +97,12 @@ export function useGlobalActivity() {
           }
         }
         const arr = [...iso3Set]
-        setCache(arr)
+        setCache(key, arr)
         setActiveCountries(iso3Set)
       })
       .catch(err => console.warn('useGlobalActivity: GDELT fetch failed', err))
       .finally(() => setLoading(false))
-  }, [])
+  }, [topicCategory])
 
   return { activeCountries, loading }
 }
