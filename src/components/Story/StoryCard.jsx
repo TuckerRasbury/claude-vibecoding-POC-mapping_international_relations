@@ -21,35 +21,35 @@ export default function StoryCard({ story, isFirst }) {
   const date = formatDate(story.date)
 
   return (
-    <div className={`py-3 ${isFirst ? '' : 'border-t border-[#1a2540]'}`}>
+    <div className={`py-3 ${isFirst ? '' : 'border-t border-newsprint-400'}`}>
       <a
         href={story.url}
         target="_blank"
         rel="noopener noreferrer"
         className="block group"
       >
-        <p className="text-sm text-slate-200 leading-snug group-hover:text-amber-300 transition-colors">
+        <p className="font-serif text-sm text-ink leading-snug group-hover:text-broadred transition-colors">
           {story.headline}
         </p>
       </a>
       <div className="flex items-center gap-2 mt-1.5 flex-wrap">
         {story.source && (
-          <span className="text-xs text-amber-700 font-medium">{story.source}</span>
+          <span className="text-xs text-broadred font-semibold">{story.source}</span>
         )}
         {date && (
           <>
-            <span className="text-slate-700 text-xs">·</span>
-            <span className="text-xs text-slate-600">{date}</span>
+            <span className="text-newsprint-400 text-xs">·</span>
+            <span className="text-xs text-ink-muted">{date}</span>
           </>
         )}
         {story.url && (
           <>
-            <span className="text-slate-700 text-xs">·</span>
+            <span className="text-newsprint-400 text-xs">·</span>
             <a
               href={story.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-slate-500 hover:text-amber-500 transition-colors"
+              className="text-xs text-ink-muted hover:text-broadred transition-colors"
             >
               Read →
             </a>

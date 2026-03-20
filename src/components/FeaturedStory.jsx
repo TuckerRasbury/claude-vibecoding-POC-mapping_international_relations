@@ -38,11 +38,11 @@ export default function FeaturedStory({ onCountryClick }) {
 
   if (loading) {
     return (
-      <div className="w-full bg-[#0d1426] border-b border-[#1a2540] px-5 py-3 flex items-center gap-3">
-        <span className="text-xs uppercase tracking-widest text-amber-600 font-semibold shrink-0">
-          Featured
+      <div className="w-full bg-newsprint-100 border-b border-newsprint-400 px-5 py-3 flex items-center gap-3">
+        <span className="text-[10px] uppercase tracking-widest text-broadred font-bold border border-broadred px-2 py-0.5 shrink-0">
+          Today's Story
         </span>
-        <div className="h-3 bg-[#1a2540] rounded animate-pulse flex-1 max-w-xl" />
+        <div className="h-3 bg-newsprint-300 rounded animate-pulse flex-1 max-w-xl" />
       </div>
     )
   }
@@ -52,11 +52,11 @@ export default function FeaturedStory({ onCountryClick }) {
   const date = formatDate(story.date)
 
   return (
-    <div className="w-full bg-[#0d1426] border-b border-[#1a2540]">
+    <div className="w-full bg-newsprint-100 border-b-2 border-newsprint-400">
       <div className="max-w-6xl mx-auto px-5 py-3 flex items-start gap-4">
         {/* Label */}
-        <span className="text-xs uppercase tracking-widest text-amber-600 font-semibold shrink-0 mt-0.5">
-          Featured
+        <span className="text-[10px] uppercase tracking-widest text-broadred font-bold border border-broadred px-2 py-0.5 shrink-0 mt-0.5 whitespace-nowrap">
+          Today's Story
         </span>
 
         {/* Story content */}
@@ -65,26 +65,26 @@ export default function FeaturedStory({ onCountryClick }) {
             href={story.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-slate-100 text-sm font-semibold leading-snug hover:text-amber-400 transition-colors line-clamp-2 block"
+            className="text-ink font-serif text-sm font-semibold leading-snug hover:text-broadred transition-colors line-clamp-2 block"
           >
             {story.headline}
           </a>
           <div className="flex items-center gap-2 mt-1">
             {story.sourceCountry && (
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-ink-muted">
                 {story.sourceCountry}
               </span>
             )}
             {story.source && (
               <>
-                <span className="text-slate-700">·</span>
-                <span className="text-xs text-slate-500">{story.source}</span>
+                <span className="text-newsprint-400">·</span>
+                <span className="text-xs text-ink-muted">{story.source}</span>
               </>
             )}
             {date && (
               <>
-                <span className="text-slate-700">·</span>
-                <span className="text-xs text-slate-600">{date}</span>
+                <span className="text-newsprint-400">·</span>
+                <span className="text-xs text-ink-muted">{date}</span>
               </>
             )}
           </div>
@@ -97,7 +97,7 @@ export default function FeaturedStory({ onCountryClick }) {
               iso3: story.sourceCountryIso3,
               name: story.sourceCountry,
             })}
-            className="shrink-0 text-xs text-amber-600 border border-amber-800 hover:border-amber-500 hover:text-amber-400 rounded px-2.5 py-1 transition-colors whitespace-nowrap"
+            className="shrink-0 text-xs text-broadred border border-broadred hover:bg-broadred hover:text-white rounded px-2.5 py-1 transition-colors whitespace-nowrap font-semibold"
           >
             Find on map →
           </button>

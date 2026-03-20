@@ -14,14 +14,14 @@
 export default function BackgroundSection({ wikiSummary, loading }) {
   if (loading) {
     return (
-      <div className="mt-4 pt-4 border-t border-[#1a2540]">
-        <p className="text-xs uppercase tracking-widest text-slate-500 mb-2 font-semibold">
+      <div className="mt-5 pt-5 border-t border-newsprint-400">
+        <p className="text-[10px] uppercase tracking-widest text-broadred mb-2 font-bold">
           Background
         </p>
         <div className="space-y-2">
-          <div className="h-3 bg-[#1a2540] rounded animate-pulse w-full" />
-          <div className="h-3 bg-[#1a2540] rounded animate-pulse w-5/6" />
-          <div className="h-3 bg-[#1a2540] rounded animate-pulse w-4/6" />
+          <div className="h-3 bg-newsprint-300 rounded animate-pulse w-full" />
+          <div className="h-3 bg-newsprint-300 rounded animate-pulse w-5/6" />
+          <div className="h-3 bg-newsprint-300 rounded animate-pulse w-4/6" />
         </div>
       </div>
     )
@@ -32,24 +32,24 @@ export default function BackgroundSection({ wikiSummary, loading }) {
   const text = wikiSummary.extractShort ?? wikiSummary.extract
 
   return (
-    <div className="mt-4 pt-4 border-t border-[#1a2540]">
-      <p className="text-xs uppercase tracking-widest text-slate-500 mb-2 font-semibold">
+    <div className="mt-5 pt-5 border-t border-newsprint-400">
+      <p className="text-[10px] uppercase tracking-widest text-broadred mb-2 font-bold">
         Background
       </p>
       {wikiSummary.thumbnail && (
         <img
           src={wikiSummary.thumbnail}
           alt={wikiSummary.title}
-          className="w-full h-28 object-cover rounded mb-3 opacity-80"
+          className="w-full h-28 object-cover rounded mb-3"
         />
       )}
-      <p className="text-sm text-slate-300 leading-relaxed">{text}</p>
+      <p className="font-serif text-sm text-ink leading-relaxed">{text}</p>
       {wikiSummary.pageUrl && (
         <a
           href={wikiSummary.pageUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block mt-2 text-xs text-amber-600 hover:text-amber-400 transition-colors"
+          className="inline-block mt-2 text-xs text-broadred hover:text-broadred-dark font-semibold transition-colors"
         >
           Read more on Wikipedia →
         </a>

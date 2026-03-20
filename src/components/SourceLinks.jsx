@@ -13,19 +13,19 @@ export default function SourceLinks({ wikiUrl, articleUrl, articleDomain, relate
   if (!hasLinks) return null
 
   return (
-    <div className="mt-4 pt-4 border-t border-[#1a2540]">
-      <p className="text-xs uppercase tracking-widest text-slate-500 mb-2 font-semibold">
-        Go deeper
+    <div className="mt-5 pt-5 border-t border-newsprint-400">
+      <p className="text-[10px] uppercase tracking-widest text-broadred mb-2 font-bold">
+        Go Deeper
       </p>
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         {wikiUrl && (
           <a
             href={wikiUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-amber-500 hover:text-amber-300 transition-colors flex items-center gap-1.5"
+            className="text-sm text-broadred hover:text-broadred-dark transition-colors flex items-center gap-1.5 font-semibold"
           >
-            <span className="text-slate-600">→</span>
+            <span>→</span>
             Wikipedia: full article
           </a>
         )}
@@ -34,9 +34,9 @@ export default function SourceLinks({ wikiUrl, articleUrl, articleDomain, relate
             href={articleUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-amber-500 hover:text-amber-300 transition-colors flex items-center gap-1.5"
+            className="text-sm text-broadred hover:text-broadred-dark transition-colors flex items-center gap-1.5 font-semibold"
           >
-            <span className="text-slate-600">→</span>
+            <span>→</span>
             {articleDomain ? `Read on ${articleDomain}` : 'Read original article'}
           </a>
         )}
@@ -46,19 +46,19 @@ export default function SourceLinks({ wikiUrl, articleUrl, articleDomain, relate
             href={r.pageUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-slate-400 hover:text-slate-200 transition-colors flex items-start gap-1.5"
+            className="text-sm text-ink-light hover:text-ink transition-colors flex items-start gap-1.5"
           >
-            <span className="text-slate-600 mt-0.5 shrink-0">→</span>
+            <span className="text-ink-muted mt-0.5 shrink-0">→</span>
             <span>
               {r.title}
               {r.description && (
-                <span className="text-slate-600 ml-1">— {r.description}</span>
+                <span className="text-ink-muted ml-1">— {r.description}</span>
               )}
             </span>
           </a>
         ))}
       </div>
-      <p className="text-[10px] text-slate-700 mt-3 leading-relaxed">
+      <p className="text-[10px] text-ink-faint mt-4 leading-relaxed">
         Wikipedia content licensed under{' '}
         <a
           href="https://creativecommons.org/licenses/by-sa/4.0/"

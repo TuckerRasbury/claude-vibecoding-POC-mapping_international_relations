@@ -35,7 +35,7 @@ function formatDeaths(n) {
 
 function SkeletonLine({ w = 'full' }) {
   return (
-    <div className={`h-2.5 bg-[#1a2540] rounded animate-pulse w-${w} mb-2`} />
+    <div className={`h-2.5 bg-newsprint-300 rounded animate-pulse w-${w} mb-2`} />
   )
 }
 
@@ -57,7 +57,6 @@ export default function HistoryTab({ countryName, wikidataId }) {
     return () => { cancelled = true }
   }, [countryName])
 
-  const isLoading = eventsLoading || articleLoading
   const hasEvents = events.length > 0
 
   return (
@@ -65,15 +64,15 @@ export default function HistoryTab({ countryName, wikidataId }) {
 
       {/* ── Key Events ─────────────────────────────────── */}
       <section>
-        <p className="text-[10px] uppercase tracking-widest text-slate-500 font-semibold mb-3">
-          Key events
+        <p className="text-[10px] uppercase tracking-widest text-broadred font-bold mb-3">
+          Key Events
         </p>
 
         {eventsLoading && (
           <div className="space-y-3">
             {[1, 2, 3].map(i => (
               <div key={i} className="flex gap-3">
-                <div className="w-12 h-3 bg-[#1a2540] rounded animate-pulse shrink-0 mt-0.5" />
+                <div className="w-12 h-3 bg-newsprint-300 rounded animate-pulse shrink-0 mt-0.5" />
                 <div className="flex-1 space-y-1.5">
                   <SkeletonLine w="3/4" />
                   <SkeletonLine w="1/2" />
@@ -84,22 +83,22 @@ export default function HistoryTab({ countryName, wikidataId }) {
         )}
 
         {!eventsLoading && !hasEvents && (
-          <p className="text-xs text-slate-600 italic">
+          <p className="text-xs text-ink-muted italic">
             Structured historical event data is limited for {countryName}.
             See the Historical Background section below for narrative context.
           </p>
         )}
 
         {!eventsLoading && hasEvents && (
-          <ol className="relative border-l border-[#1a2540] ml-2 space-y-4">
+          <ol className="relative border-l border-newsprint-400 ml-2 space-y-4">
             {events.map((event, i) => (
               <li key={event.wikidataUrl ?? i} className="ml-4">
                 {/* Timeline dot */}
-                <span className="absolute -left-1.5 mt-1.5 w-2.5 h-2.5 rounded-full bg-[#1a2540] border border-amber-800/60" />
+                <span className="absolute -left-1.5 mt-1.5 w-2.5 h-2.5 rounded-full bg-newsprint-200 border border-broadred/50" />
 
                 <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                   {event.dateDisplay && (
-                    <span className="text-[11px] font-mono text-amber-700/80 shrink-0">
+                    <span className="text-[11px] font-mono text-broadred/70 shrink-0">
                       {event.dateDisplay}
                     </span>
                   )}
@@ -108,16 +107,16 @@ export default function HistoryTab({ countryName, wikidataId }) {
                       href={event.wikidataUrl.replace('http://www.wikidata.org/entity/', 'https://www.wikidata.org/wiki/')}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-slate-300 hover:text-amber-300 transition-colors leading-snug"
+                      className="font-serif text-xs text-ink hover:text-broadred transition-colors leading-snug"
                     >
                       {event.label}
                     </a>
                   ) : (
-                    <span className="text-xs text-slate-300 leading-snug">{event.label}</span>
+                    <span className="font-serif text-xs text-ink leading-snug">{event.label}</span>
                   )}
                 </div>
                 {event.deaths && (
-                  <p className="text-[10px] text-slate-600 mt-0.5 ml-0">
+                  <p className="text-[10px] text-ink-muted mt-0.5">
                     {formatDeaths(event.deaths)}
                   </p>
                 )}
@@ -129,8 +128,8 @@ export default function HistoryTab({ countryName, wikidataId }) {
 
       {/* ── Historical Background ───────────────────────── */}
       <section>
-        <p className="text-[10px] uppercase tracking-widest text-slate-500 font-semibold mb-3">
-          Historical background
+        <p className="text-[10px] uppercase tracking-widest text-broadred font-bold mb-3">
+          Historical Background
         </p>
 
         {articleLoading && (
@@ -140,7 +139,7 @@ export default function HistoryTab({ countryName, wikidataId }) {
         )}
 
         {!articleLoading && !historyArticle && (
-          <p className="text-xs text-slate-600 italic">
+          <p className="text-xs text-ink-muted italic">
             No historical background available for {countryName}.
           </p>
         )}
@@ -151,10 +150,10 @@ export default function HistoryTab({ countryName, wikidataId }) {
               <img
                 src={historyArticle.thumbnail}
                 alt={historyArticle.title}
-                className="float-right ml-3 mb-2 w-24 rounded opacity-80"
+                className="float-right ml-3 mb-2 w-24 rounded"
               />
             )}
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <p className="font-serif text-sm text-ink leading-relaxed">
               {historyArticle.extractShort}
             </p>
             <div className="clear-both" />
@@ -165,8 +164,8 @@ export default function HistoryTab({ countryName, wikidataId }) {
       {/* ── Go Deeper ──────────────────────────────────── */}
       {(historyArticle || wikidataId) && (
         <section>
-          <p className="text-[10px] uppercase tracking-widest text-slate-500 font-semibold mb-2">
-            Go deeper
+          <p className="text-[10px] uppercase tracking-widest text-broadred font-bold mb-2">
+            Go Deeper
           </p>
           <div className="flex flex-col gap-1.5">
             {historyArticle?.pageUrl && (
@@ -174,7 +173,7 @@ export default function HistoryTab({ countryName, wikidataId }) {
                 href={historyArticle.pageUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-slate-400 hover:text-amber-300 transition-colors"
+                className="text-xs text-broadred hover:text-broadred-dark font-semibold transition-colors"
               >
                 {historyArticle.title} — Wikipedia →
               </a>
@@ -184,13 +183,13 @@ export default function HistoryTab({ countryName, wikidataId }) {
                 href={`https://www.wikidata.org/wiki/${wikidataId}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
+                className="text-xs text-ink-muted hover:text-ink-light transition-colors"
               >
                 {countryName} on Wikidata →
               </a>
             )}
           </div>
-          <p className="text-[10px] text-slate-700 mt-3">
+          <p className="text-[10px] text-ink-faint mt-3">
             Content from Wikipedia (CC BY-SA 4.0) · Data from Wikidata (CC0)
           </p>
         </section>
